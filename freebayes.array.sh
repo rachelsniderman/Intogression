@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH -J array_job
-#SBATCH -o errorout/array_job_out_%A_%a.txt
-#SBATCH -e errorout/array_job_err_%A_%a.txt
+#SBATCH -o slurm-log/erroutput/array_job_out_%A_%a.txt
+#SBATCH -e slurm-log/erroutput/array_job_err_%A_%a.txt
 #SBATCH --array=1-10180
 #SBATCH -p med
 #SBATCH --mem=12000
@@ -11,7 +11,7 @@
 
 # mod 2017-01-11
 
-bwagenind=~/reference/heteroclitus-3.0.2_genomic.fna.gz
+bwagenind=~/reference/heteroclitus_000826765.1_3.0.2_genomic.fa
 my_freebayes=~/bin/freebayes/bin/freebayes
 my_bedtools=~/bin/bedtools2/bin/bedtools
 my_bamtools=~/bin/bamtools/bin/bamtools
@@ -31,9 +31,9 @@ echo $region
 
 outfile=$scaf.vcf
 
-vcf_out=~/admixture_mapping/variants/all
-bam_list=~/admixture_mapping/scripts/bam.all.list
-pop_list=~/admixture_mapping/scripts/pop.list.all
+vcf_out=~/fish/variants/output
+bam_list=~/fish/scripts/bam.list
+pop_list=~/fish/scripts/indivpop.list
 
 $my_bamtools merge -list $bam_list -region $region| \
 $my_bamtools filter -in stdin -mapQuality '>30' -isProperPair true | \
