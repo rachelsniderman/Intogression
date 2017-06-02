@@ -8,18 +8,21 @@
 
 # mod 2017-03-9
 
+module load vcftools/0.1.13
+
 cd ~/fish/variants
 
-zcat ~/fish/variants/all.filtered.vcf.gz  |\
-~/bin/vcftools/bin/vcftools --vcf - \
---plink --out all.filtered
+zcat ~/fish/variants/all.filtered.vcf.gz |\
+vcftools --vcf - \
+--plink --out all \
+--chrom-map ~/fish/scripts/all.plink-chrom-map.txt
 
 #think markers for ld
-~/bin/plink --file all.filtered --indep 50 5 2 \
+~/bin/plink --file all --indep 50 5 2 \
 --allow-extra-chr \
--out all.filtered.plink.ld
+-out all.plink.ld
 
 # output thinned ped
 
-~/bin/plink --file all.filtered --extract all.filtered.plink.ld.prune.in --recode --allow-extra-chr \
---out all.filter.thin
+~/bin/plink --file all --extract all.plink.ld.prune.in --recode --allow-extra-chr \
+--out all.thin

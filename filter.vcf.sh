@@ -15,6 +15,7 @@ cd ~/fish/variants/
 --minQ 20 --minGQ 30 \
 --min-alleles 2 --max-alleles 2 \
 --maxDP 8000 --minDP 30 \
+--max-missing 0.7 \
 --remove-indels --stdout | bgzip > all.filtered.vcf.gz
 
 tabix -p vcf all.filtered.vcf.gz

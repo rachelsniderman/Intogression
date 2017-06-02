@@ -2,7 +2,7 @@
 #SBATCH -J array_job
 #SBATCH -o slurm-log/erroutput/array_job_out_%A_%a.txt
 #SBATCH -e slurm-log/erroutput/array_job_err_%A_%a.txt
-#SBATCH --array=1-10180
+#SBATCH --array=1-1709
 #SBATCH -p med
 #SBATCH --mem=12000
 ###### number of nodes
@@ -16,18 +16,8 @@ my_freebayes=~/bin/freebayes/bin/freebayes
 my_bedtools=~/bin/bedtools2/bin/bedtools
 my_bamtools=~/bin/bamtools/bin/bamtools
 
-start=12224400.1
-scafnum=$(expr "scale=9; $SLURM_ARRAY_TASK_ID + $start" | bc)
-scaf=NW_0$scafnum
-echo $scafnum
+scaf=$(cat ~/fish/scripts/scaffold.redo.txt | awk 'NR=='$SLURM_ARRAY_TASK_ID'')
 echo $scaf
-
-endpos=$(expr $(grep -P "$scaf\t" ~/reference/heteroclitus_000826765.1_3.0.2_genomic.fa.fai | cut -f 2) - 1)
-
-echo $endpos
-
-region=$scaf:1..$endpos
-echo $region
 
 outfile=$scaf.vcf
 
@@ -35,7 +25,7 @@ vcf_out=~/fish/variants/output
 bam_list=~/fish/scripts/bam2.list
 pop_list=~/fish/scripts/indivpops.list
 
-$my_bamtools merge -list $bam_list -region $region| \
+$my_bamtools merge -list $bam_list -region $scaf | \
 $my_bamtools filter -in stdin -mapQuality '>30' -isProperPair true | \
 $my_freebayes -f $bwagenind --use-best-n-alleles 4 --pooled-discrete \
 --populations $pop_list --stdin > $vcf_out/$outfile

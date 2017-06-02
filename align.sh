@@ -1,21 +1,16 @@
 #!/bin/bash -l
 #SBATCH -J array_job
-#SBATCH -o slurm-log/array_job_out_%A_%a.txt
-#SBATCH -e slurm-log/array_job_err_%A_%a.txt
+#SBATCH -o slurm-log/erroutput/array_job_out_%A_%a.txt
+#SBATCH -e slurm-log/erroutput/array_job_err_%A_%a.txt
 #SBATCH -p med
-#SBATCH --array=1-80
+#SBATCH --array=1-100
 #SBATCH --mem=20000
 ####SBATCH --cpus-per-task=6
 
-# mod 2017-01-11
-
-#change all of these variables to match your directory structure.
-#lib=AC-1
-#run=run-1
+# mod 2017-04- 24
 
 #Change this to where the fastq files are in your directory ~/fish/data/
-indir=~/fish/data/
-#/$run/$lib/
+indir=/home/rsbrenna/introgression/fastq
 
 #these are prgrams that you can download
 my_samtools=~/bin/samtools-1.3.1/samtools
@@ -31,7 +26,7 @@ outdir=~/fish/alligned/
 
 #specifying your different reads
 #forward read
-fq1=$(find $indir -name "*_RA.fastq" | sed -n $(echo $SLURM_ARRAY_TASK_ID)p)
+fq1=$(find $indir -name "*_RA.fastq.gz" | sed -n $(echo $SLURM_ARRAY_TASK_ID)p)
 #reverse read
 fq2=$(echo $fq1 | sed 's/_RA/_RB/g')
 #sample name ie, PP-123-12
